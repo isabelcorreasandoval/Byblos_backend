@@ -15,7 +15,7 @@ const obtenerMensajes = async (req, res) => {
     res.status(200).json(mensajes);
 };
 
-// Crear un mensaje y enviar notificación 
+// CREATE. Crear un mensaje y enviar notificación 
 const crearMensaje = async (req, res) => {
     try {
         const nuevoMensaje = await Contacto.create(req.body);
