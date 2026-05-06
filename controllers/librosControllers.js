@@ -8,7 +8,6 @@ const getLibros = asyncHandler(async (req, res) => {
     let libros;
 
     if (titulo) {
-
         libros = await Libro.find({ 
             titulo: { $regex: titulo, $options: "i" } 
         });
@@ -30,7 +29,8 @@ const addLibro = asyncHandler(async (req, res) => {
     const libro = await Libro.create({
         titulo: req.body.titulo,
         autor: req.body.autor,
-        descripcion: req.body.descripcion
+        descripcion: req.body.descripcion,
+        isbn: req.body.isbn
     });
 
     res.status(201).json(libro);
