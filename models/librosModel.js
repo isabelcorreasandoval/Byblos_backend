@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const libroSchema = mongoose.Schema({
     titulo: {
         type: String,
@@ -13,9 +12,12 @@ const libroSchema = mongoose.Schema({
     descripcion: {
         type: String,
         required: [true, "Por favor teclea una breve descripción del libro"]
+    },
+    isbn: {
+        type: String,
+        required: false 
     }
 }, {
-    
     timestamps: true
 });
 
