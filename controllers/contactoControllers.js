@@ -11,8 +11,12 @@ const transporter = nodemailer.createTransport({
 
 // obtener todos los mensajes (READ)
 const obtenerMensajes = async (req, res) => {
-    const mensajes = await Contacto.find();
-    res.status(200).json(mensajes);
+    try {
+        const mensajes = await Contacto.find();
+        res.status(200).json(mensajes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 // CREATE. Crear un mensaje y enviar notificación 
@@ -38,7 +42,7 @@ const crearMensaje = async (req, res) => {
                             <p style="margin: 5px 0;"><strong>Mensaje:</strong> ${req.body.mensaje}</p>
                         </div>
                         <p style="font-size: 12px; color: #888; text-align: center;">
-                            Notificación automática del sistema Byblos.
+                            Notificacion automatica del sistema Byblos.
                         </p>
                     </div>
                 </div>
@@ -46,14 +50,12 @@ const crearMensaje = async (req, res) => {
         };
 
         // Envío del correo
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('Error de envío:', error);
-            } else {
-                console.log('Notificación enviada con éxito');
-            }
-        });
-
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log('Notificacion enviada con exito');
+        } catch (mailError) {
+            console.log('Error de envio:', mailError.message);
+        }
 
         res.status(201).json(nuevoMensaje);
 
@@ -64,30 +66,28 @@ const crearMensaje = async (req, res) => {
 
 // actualizar un mensaje (UPDATE)
 const actualizarMensaje = async (req, res) => {
-    const mensaje = await Contacto.findById(req.params.id);
-    if (!mensaje) {
-        res.status(404);
-        throw new Error('Mensaje no encontrado');
+    try {
+        const mensajeActualizado = await Contacto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json({
+            message: 'Contacto actualizado correctamente',
+            data: mensajeActualizado
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    const mensajeActualizado = await Contacto.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.status(200).json({
-        message: 'Contacto actualizado correctamente',
-        data: mensajeActualizado
-    });
 };
 
 // eliminar un mensaje (DELETE)
 const eliminarMensaje = async (req, res) => {
-    const mensaje = await Contacto.findById(req.params.id);
-    if (!mensaje) {
-        res.status(404);
-        throw new Error('Mensaje no encontrado');
+    try {
+        await Contacto.findByIdAndDelete(req.params.id);
+        res.status(200).json({ 
+            message: 'Contacto eliminado correctamente', 
+            id: req.params.id 
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    await mensaje.deleteOne();
-    res.status(200).json({ 
-        message: 'Contacto eliminado correctamente', 
-        id: req.params.id 
-    });
 };
 
 module.exports = { obtenerMensajes, crearMensaje, actualizarMensaje, eliminarMensaje };
