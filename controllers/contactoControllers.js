@@ -24,8 +24,8 @@ const crearMensaje = async (req, res) => {
 
         // Configuración del correo con diseño
         const mailOptions = {
-            from: `"Byblos Notificaciones" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER, 
+            from: `"Byblos Notificaciones" <${process.env.BREVO_USER}>`,
+            to: process.env.EMAIL_USER,
             subject: `Nuevo comentario de: ${req.body.nombre}`,
             html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #d4c3a3; border-radius: 10px; overflow: hidden;">
@@ -55,7 +55,6 @@ const crearMensaje = async (req, res) => {
                 console.log('Notificación enviada con éxito');
             }
         });
-
 
         res.status(201).json(nuevoMensaje);
 
