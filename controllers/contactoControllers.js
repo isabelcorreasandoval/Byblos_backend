@@ -15,11 +15,8 @@ const crearMensaje = async (req, res) => {
     try {
         const nuevoMensaje = await Contacto.create(req.body);
 
-        // Configuración del correo para la API de Brevo
         const emailData = {
-            // Usamos EMAIL_USER como remitente (debe estar verificado en Brevo)
             sender: { name: "Byblos Notificaciones", email: process.env.EMAIL_USER },
-            // Enviamos el correo a la misma dirección
             to: [{ email: process.env.EMAIL_USER, name: "Isabel" }],
             subject: `Nuevo comentario de: ${req.body.nombre}`,
             htmlContent: `
@@ -42,7 +39,7 @@ const crearMensaje = async (req, res) => {
             `
         };
 
-        // Envío del correo vía API HTTP (Saltando el bloqueo de Render)
+        // envío del correo via API HTTP 
         fetch('https://api.brevo.com/v3/smtp/email', {
             method: 'POST',
             headers: {
